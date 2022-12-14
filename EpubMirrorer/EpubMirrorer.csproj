@@ -8,8 +8,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-      <PackageReference Include="VersOne.Epub" Version="3.3.0-alpha1" />
+      <PackageReference Include="AngleSharp" Version="0.17.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="VersOne.Epub">
+        <HintPath>VersOne.Epub.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\VersOne.Epub\VersOne.Epub.csproj" />
     </ItemGroup>
 
 </Project>

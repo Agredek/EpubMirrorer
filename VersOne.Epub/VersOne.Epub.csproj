@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Authors>vers, agred</Authors>
+        <Company />
+        <Product />
+        <Description />
+        <Copyright>vers, 2015-2022</Copyright>
+        <Version>3.3</Version>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		<LangVersion>10</LangVersion>
+		<TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+</Project>

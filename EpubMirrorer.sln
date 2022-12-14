@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpubMirrorer", "EpubMirrorer\EpubMirrorer.csproj", "{2DA98FFE-D7AE-439E-B7D2-3C7E4E9CCE46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VersOne.Epub", "VersOne.Epub\VersOne.Epub.csproj", "{2CBE1411-9B59-4900-BED8-65C959707F1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{2DA98FFE-D7AE-439E-B7D2-3C7E4E9CCE46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DA98FFE-D7AE-439E-B7D2-3C7E4E9CCE46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DA98FFE-D7AE-439E-B7D2-3C7E4E9CCE46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CBE1411-9B59-4900-BED8-65C959707F1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CBE1411-9B59-4900-BED8-65C959707F1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CBE1411-9B59-4900-BED8-65C959707F1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CBE1411-9B59-4900-BED8-65C959707F1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,11 +1,11 @@
-﻿using HtmlAgilityPack;
+﻿using AngleSharp;
 using VersOne.Epub;
 
 namespace EpubMirrorer;
 
 internal static class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         if (args.Length <= 0)
         {
@@ -26,56 +26,35 @@ internal static class Program
             return;
         }
 
-        var directoryName = Path.GetDirectoryName(filePath);
-        if (directoryName == null)
-        {
-            Console.WriteLine($"Directory '{directoryName}' doesn't exist!");
+        var reversedFilePath = FileHelper.CreateReversedFile(filePath);
+        if (reversedFilePath is not {Length: > 0} || !File.Exists(reversedFilePath))
             return;
-        }
 
-        var fileName = Path.GetFileNameWithoutExtension(filePath);
-        fileName += "(reversed)";
-        
-        var extension = Path.GetExtension(filePath);
-        var newFilePath = Path.Combine(directoryName, $"{fileName}{extension}");
-        try
-        {
-            if (File.Exists(newFilePath))
-                File.Delete(newFilePath);
-            File.Copy(filePath, newFilePath);
-        }
-        catch
-        {
-            Console.WriteLine("Exception!");
-        }
-        
-        using var book = EpubReader.OpenBook(filePath);
-        foreach (var textContentFile in book.GetReadingOrder())
-            ReverseContentText(textContentFile);
+        using var context = BrowsingContext.New();
+        using var book = await EpubReader.OpenBookAsync(reversedFilePath);
+        foreach (var textContentFile in await book.GetReadingOrderAsync())
+            await ReverseContentText(context, textContentFile);
     }
 
-    private static void ReverseContentText(EpubTextContentFileRef textContentFile)
+    private static async Task ReverseContentText(IBrowsingContext context, EpubTextContentFileRef textContentFile)
     {
-        HtmlDocument htmlDocument = new();
-        htmlDocument.LoadHtml(textContentFile.ReadContent());
-        var textNodes = htmlDocument.DocumentNode.SelectNodes("//p/text()");
+        await using var contentStream = textContentFile.GetContentStream();
+        var document = await context.OpenAsync(req => req.Content(new StreamReader(contentStream).ReadToEnd()));
+        var textNodes = document.QuerySelectorAll("p");
         if (textNodes == null)
             return;
-        
+
         foreach (var node in textNodes)
         {
-            if (node is not HtmlTextNode {Text.Length: > 1})
+            var array = node.TextContent.ToCharArray();
+            if (array is not {Length: > 0})
                 continue;
 
-            var textNode = (HtmlTextNode) node.CloneNode(true);
-            var array = textNode.Text.ToCharArray();
             Array.Reverse(array);
-            textNode.Text = new string(array);
-            htmlDocument.DocumentNode.ReplaceChild(textNode, node);
+            node.TextContent = new string(array);
         }
-
-        var filePathInEpubArchive = textContentFile.FilePathInEpubArchive;
-        using var writer = new StringWriter();
-        htmlDocument.Save(filePathInEpubArchive);
+        
+        var html = document.ToHtml();
+        textContentFile.SetContent(contentStream, html);
     }
 }

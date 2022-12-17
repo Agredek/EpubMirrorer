@@ -1,4 +1,5 @@
 ﻿using AngleSharp;
+using EpubMirrorer.Strategies;
 using VersOne.Epub;
 
 namespace EpubMirrorer;
@@ -32,29 +33,8 @@ internal static class Program
 
         using var context = BrowsingContext.New();
         using var book = await EpubReader.OpenBookAsync(reversedFilePath);
+        var strategy = new WordsMirroringStrategy();
         foreach (var textContentFile in await book.GetReadingOrderAsync())
-            await ReverseContentText(context, textContentFile);
-    }
-
-    private static async Task ReverseContentText(IBrowsingContext context, EpubTextContentFileRef textContentFile)
-    {
-        await using var contentStream = textContentFile.GetContentStream();
-        var document = await context.OpenAsync(req => req.Content(new StreamReader(contentStream).ReadToEnd()));
-        var textNodes = document.QuerySelectorAll("p");
-        if (textNodes == null)
-            return;
-
-        foreach (var node in textNodes)
-        {
-            var array = node.TextContent.ToCharArray();
-            if (array is not {Length: > 0})
-                continue;
-
-            Array.Reverse(array);
-            node.TextContent = new string(array);
-        }
-        
-        var html = document.ToHtml();
-        textContentFile.SetContent(contentStream, html);
+            await strategy.ReverseContentText(context, textContentFile);
     }
 }
